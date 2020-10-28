@@ -1,0 +1,1 @@
+cv2.face_LBPHFaceRecognizer.create()
