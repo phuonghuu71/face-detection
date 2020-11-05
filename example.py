@@ -1,15 +1,12 @@
 import cv2
 import numpy as np
 from PIL import Image
-import pickle
 import sqlite3
-import face_recognition
 import argparse
 import math
 import time
 
 import os
-
 
 import tkinter as tk
 from tkinter import messagebox
