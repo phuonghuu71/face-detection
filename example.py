@@ -205,30 +205,23 @@ def recog_face_gender_age():
         if not bboxes:
             print("No face Detected, Checking next frame")
             continue
+        
+        for(x,y,w,h) in faces:
+            cv2.rectangle(frame,(x,y),(x+w,y+h),(255,0,0),2)
+            id,conf=rec.predict(gray[y:y+h,x:x+w])
+            profile=getProfile(id)
+            if(profile!=None):
+                cv2.putText(frameFace, "Name: " + str(profile[1]), (x, y-40), cv2.FONT_HERSHEY_SIMPLEX, 0.8, (0, 255, 255), 2, cv2.LINE_AA)
 
         for bbox in bboxes:
-            # print(bbox)
             
             face = frame[max(0,bbox[1]-padding):min(bbox[3]+padding,frame.shape[0]-1),max(0,bbox[0]-padding):min(bbox[2]+padding, frame.shape[1]-1)]
-
-            #cv2.rectangle(frameFace,max(0,bbox[1]-padding):min(bbox[3]+padding,frame.shape[0]-1),max(0,bbox[0]-padding):min(bbox[2]+padding, frame.shape[1]-1),(255,0,0),2)
 
             blob = cv2.dnn.blobFromImage(face, 1.0, (227, 227), MODEL_MEAN_VALUES, swapRB=False)
             genderNet.setInput(blob)
             genderPreds = genderNet.forward()
             gender = genderList[genderPreds[0].argmax()]
             
-            #cv.rectangle(img,(bbox[0],bbox[1]),(bbox[0]+bbox[2],bbox[1]+bbox[3]),(255,0,0),2)
-            #id,conf=rec.predict(gray[bbox[1]:bbox[1]+bbox[2],bbox[0]:bbox[0]+bbox[3]])
-            id, conf=rec.predict(gray[max(0,bbox[1]-padding):min(bbox[3]+padding,frame.shape[0]-1),max(0,bbox[0]-padding):min(bbox[2]+padding, frame.shape[1]-1)])
-            profile=getProfile(id)
-            
-            #set text to window
-            if(profile!=None):
-                #cv2.PutText(cv2.fromarray(img),str(id),(x+y+h),font,(0,0,255),2);
-                cv2.putText(frameFace, "Name: " + str(profile[1]), (bbox[0], bbox[1]-40), cv2.FONT_HERSHEY_SIMPLEX, 0.8, (0, 255, 255), 2, cv2.LINE_AA)
-
-            # print("Gender Output : {}".format(genderPreds))
             print("Gender : {}, conf = {:.3f}".format(gender, genderPreds[0].max()))
 
             ageNet.setInput(blob)
@@ -239,12 +232,8 @@ def recog_face_gender_age():
 
             label = "{},{}".format(gender, age)
             cv2.putText(frameFace, label, (bbox[0], bbox[1]-10), cv2.FONT_HERSHEY_SIMPLEX, 0.8, (0, 255, 255), 2, cv2.LINE_AA)
-            cv2.imshow("Age Gender Demo", frameFace)
-            # cv.imwrite("age-gender-out-{}".format(args.input),frameFace)
+        cv2.imshow("Age Gender Demo", frameFace)
         print("time : {:.3f}".format(time.time() - t))
-    # raiseFrame(recog_face_gender_ageFrame)
-
-
 
 
 #Tkinter
