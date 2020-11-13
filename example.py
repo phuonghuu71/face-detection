@@ -61,17 +61,6 @@ def register():
     cam.release()
     cv2.destroyAllWindows()
 
-
-    faceDetect=cv2.CascadeClassifier('haarcascade_frontalface_default.xml')
-    cam=cv2.VideoCapture(0)
-    rec=cv2.face.LBPHFaceRecognizer_create()
-    rec.read("recognizer\\trainningData.yml")
-    id=0
-    #set text style
-    fontface = cv2.FONT_HERSHEY_SIMPLEX
-    fontscale = 1
-    fontcolor = (203,23,252)
-
     training()
 
     #get data from sqlite by ID
@@ -113,7 +102,7 @@ def training():
     Ids,faces=getImagesAndLabels(path)
     #trainning
     recognizer.train(faces,np.array(Ids))
-    recognizer.save('recognizer/trainningData.yml')
+    recognizer.save('recognizer\\trainningData.yml')
     cv2.destroyAllWindows()
 
     # raiseFrame(TrainingFrame)
@@ -122,7 +111,7 @@ def recog_face_gender_age():
     faceDetect=cv2.CascadeClassifier('haarcascade_frontalface_default.xml')
     rec=cv2.face.LBPHFaceRecognizer_create()
 
-    rec.read(r"recognizer/trainningData.yml")
+    rec.read("recognizer\\trainningData.yml")
     id=0
     #set text style
     fontface = cv2.FONT_HERSHEY_SIMPLEX
@@ -298,4 +287,3 @@ backButton.grid(row=4,column=4)
 # dfu = Dlib_Face_Unlock()
 raiseFrame(recog_face_gender_ageFrame)
 root.mainloop()
-
